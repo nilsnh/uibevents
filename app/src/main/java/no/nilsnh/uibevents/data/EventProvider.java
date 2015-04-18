@@ -6,12 +6,11 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-public class EventProvider extends ContentProvider{
+public class EventProvider extends ContentProvider {
 
     private EventDbHelper eventDbHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     static final int EVENT = 100;
-
 
     @Override
     public boolean onCreate() {

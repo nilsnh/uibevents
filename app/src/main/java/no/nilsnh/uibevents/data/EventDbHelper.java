@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class EventDbHelper {
 
@@ -34,7 +38,7 @@ public class EventDbHelper {
         this.ctx = context;
     }
 
-    public void fetchWebEventData() {
+    public String fetchWebEventData() {
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -55,7 +59,7 @@ public class EventDbHelper {
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
-                return;
+                return eventJsonStr;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -69,7 +73,7 @@ public class EventDbHelper {
 
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
-                return;
+                return eventJsonStr;
             }
             eventJsonStr = buffer.toString();
         } catch (IOException e) {
@@ -88,7 +92,36 @@ public class EventDbHelper {
                 }
             }
         }
-        return;
+        return eventJsonStr;
+    }
+
+    public static ArrayList<ContentValues> parseJsonEvents(String data) throws JSONException {
+        ArrayList<ContentValues> parsedEvents = new ArrayList<>();
+        JSONArray events = new JSONObject(data).getJSONArray("events");
+        for (int i = 0; i < events.length(); i++) {
+            JSONObject event = events.getJSONObject(i);
+
+            Integer id = event.getInt("id");
+            String type = event.getString("type");
+            String title = event.getString("title");
+            String date_from = event.getString("date_from");
+            String date_to = event.getString("date_to");
+            String location = event.getString("location");
+            String details = event.getString("lead");
+            String url = event.getString("path");
+
+            ContentValues cValues = new ContentValues();
+            event.put(EventContract.EventEntry.COLUMN_EVENT_ID, id);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_TYPE, type);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_TITLE, title);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_DATE_FROM, date_from);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_DATE_TO, date_to);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_LOCATION, location);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_DETAILS, details);
+            event.put(EventContract.EventEntry.COLUMN_EVENT_URL, url);
+            parsedEvents.add(cValues);
+        }
+        return parsedEvents;
     }
 
     public void saveFile(String data) {
@@ -104,40 +137,81 @@ public class EventDbHelper {
         }
     }
 
-    public String getStoredData() {
+    public ArrayList<ContentValues> getStoredData() {
         File file = new File(filename);
 
         if(file.exists()){
-            //Read text from file
-            StringBuilder text = new StringBuilder();
-
+            ArrayList<String> eventStrings = new ArrayList<>();
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
-
                 while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('n');
+                    eventStrings.add(line);
                 }
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
-            return text.toString();
+
+            String[] eventDetailsString = null;
+            ContentValues eventDetailsCValue = new ContentValues();
+            ArrayList<ContentValues> events = new ArrayList<>();
+            for (String event: eventStrings) {
+                eventDetailsString = event.split(";");
+                eventDetailsCValue.put("id", eventDetailsString[0]);
+                eventDetailsCValue.put("type", eventDetailsString[1]);
+                eventDetailsCValue.put("title", eventDetailsString[2]);
+                eventDetailsCValue.put("date_from", eventDetailsString[3]);
+                eventDetailsCValue.put("date_to", eventDetailsString[4]);
+                eventDetailsCValue.put("location", eventDetailsString[5]);
+                eventDetailsCValue.put("details", eventDetailsString[6]);
+                eventDetailsCValue.put("url", eventDetailsString[7]);
+                events.add(eventDetailsCValue);
+            }
+            return events;
         }
         else {
-            return "Was not able to find file";
+            Log.d(LOG_TAG, "Was not able to find file");
+            return null;
         }
     }
 
     public Long insert(ContentValues values) {
+        File file = new File(ctx.getFilesDir(),filename);
 
+        //First retrieve all data,then check if the value is already stored.
+        ArrayList<ContentValues> storedValues = getStoredData();
+
+        //If no data exist already create new arrayList
+        if (storedValues == null) storedValues = new ArrayList<>();
+
+        //If the new data is already there stop execution.
+        if (storedValues.contains(values)) return null;
+
+        storedValues.add(values);
+        Integer storedDataPosition = storedValues.indexOf(values);
+
+        //Write new data to textFile
         try {
+
+            if (!file.exists()) file.createNewFile();
+
             BufferedWriter buf = new BufferedWriter(new FileWriter(filename, true));
+            for (ContentValues event : storedValues) {
+                buf.write(event.getAsString("id") + ";");
+                buf.write(event.getAsString("type") + ";");
+                buf.write(event.getAsString("title") + ";");
+                buf.write(event.getAsString("date_from") + ";");
+                buf.write(event.getAsString("date_to") + ";");
+                buf.write(event.getAsString("location") + ";");
+                buf.write(event.getAsString("details") + ";");
+                buf.write(event.getAsString("url"));
+                buf.newLine();
+            }
+            buf.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return Long.valueOf(storedDataPosition);
     }
 }
