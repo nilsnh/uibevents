@@ -77,6 +77,5 @@ public class ApplicationTest extends AndroidTestCase {
         Cursor cursor = getContext().getContentResolver()
                 .query(EventContract.EventEntry.CONTENT_URI, null, null, null, null);
         assertNotNull(cursor);
-
     }
 }

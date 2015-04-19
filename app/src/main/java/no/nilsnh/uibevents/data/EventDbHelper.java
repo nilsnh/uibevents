@@ -175,7 +175,6 @@ public class EventDbHelper {
 
     public int delete(String tableName, String selection, String[] selectionArgs) {
         ArrayList<Event> storedEvents = getStoredData();
-        ArrayList<Event> entriesToDelete = new ArrayList<>();
         Integer numDeletedRows = null;
 
         //If everything is to be deleted just delete the file

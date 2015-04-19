@@ -4,4 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="content_authority">no.nilsnh.uibevents</string>
+    <string name="list_item_category_textview">exhibition</string>
+    <string name="list_item_date_from_textview">18.11.15</string>
+    <string name="list_item_date_to_textview">20.11.15</string>
+    <string name="list_item_title_textview">The Norwegian Constitution \"VI: 1814 - 2014\"</string>
 </resources>

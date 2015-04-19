@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 public class EventProvider extends ContentProvider {
@@ -87,7 +88,21 @@ public class EventProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated;
+        switch (match) {
+            case EVENT:
+                rowsUpdated = eventDbHelper.delete(
+                        EventContract.EventEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        // Because a null deletes all rows
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 
     static UriMatcher buildUriMatcher() {
