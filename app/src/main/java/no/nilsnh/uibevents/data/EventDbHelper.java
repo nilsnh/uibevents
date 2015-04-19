@@ -108,14 +108,23 @@ public class EventDbHelper {
     public void saveFile(String data) {
         FileOutputStream outputStream;
         try {
-            outputStream = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(data.getBytes());
-            outputStream.close();
+            String fullFilePath = ctx.getFilesDir() + "/" + filename;
+            BufferedWriter buf = new BufferedWriter(new FileWriter(fullFilePath));
+            buf.write(data);
+            buf.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             Log.d(LOG_TAG, "Data was saved!");
         }
+    }
+
+    public void saveFile(ArrayList<Event> events) {
+        StringBuilder sb = new StringBuilder();
+        for (Event event: events) {
+            sb.append(event.toString() + "\n");
+        }
+        saveFile(sb.toString());
     }
 
     public ArrayList<Event> getStoredData() {
@@ -147,35 +156,47 @@ public class EventDbHelper {
     }
 
     public Long insert(ContentValues values) {
-        File file = new File(ctx.getFilesDir(),filename);
         Event newEvent = new Event(values);
 
         //First retrieve all data,then check if the value is already stored.
-        ArrayList<Event> storedValues = getStoredData();
+        ArrayList<Event> storedEvents = getStoredData();
 
         //If no data exist already create new arrayList
-        if (storedValues == null) storedValues = new ArrayList<Event>();
+        if (storedEvents == null) storedEvents = new ArrayList<Event>();
 
         //If the new data is already there stop execution.
-        if (storedValues.contains(newEvent)) {
-            return Long.valueOf(storedValues.indexOf(newEvent) + 1);
+        if (storedEvents.contains(newEvent)) {
+            return Long.valueOf(storedEvents.indexOf(newEvent) + 1);
         }
-
-        storedValues.add(newEvent);
-        Long storedDataPosition = Long.valueOf(storedValues.indexOf(newEvent) + 1);
-
-        //Write new data to textFile
-        try {
-            if (!file.exists()) file.createNewFile();
-            BufferedWriter buf = new BufferedWriter(new FileWriter(ctx.getFilesDir() + "/" + filename, true));
-            for (Event event : storedValues) {
-                buf.write(event.toString());
-                buf.newLine();
-            }
-            buf.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        storedEvents.add(newEvent);
+        Long storedDataPosition = Long.valueOf(storedEvents.indexOf(newEvent) + 1);
+        saveFile(storedEvents);
         return storedDataPosition;
+    }
+
+    public int delete(String tableName, String selection, String[] selectionArgs) {
+        ArrayList<Event> storedEvents = getStoredData();
+        ArrayList<Event> entriesToDelete = new ArrayList<>();
+        Integer numDeletedRows = null;
+
+        //If everything is to be deleted just delete the file
+        if (selection == "1") {
+            numDeletedRows = storedEvents.size();
+            File file = new File(ctx.getFilesDir() + "/" + filename);
+            file.delete();
+            return numDeletedRows;
+        }
+
+        //Loop through removing any events satisfying the criteria
+        for (Event event : storedEvents) {
+            if(event.isToBeDeleted(selection, selectionArgs)) {
+                storedEvents.remove(event);
+                numDeletedRows = numDeletedRows + 1;
+            }
+        }
+
+        saveFile(storedEvents);
+
+        return numDeletedRows;
     }
 }

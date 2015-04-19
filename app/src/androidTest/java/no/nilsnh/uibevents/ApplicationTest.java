@@ -47,4 +47,21 @@ public class ApplicationTest extends AndroidTestCase {
                 .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
         assertTrue(eventDbHelper.getStoredData().contains(events.get(0)));
     }
+
+    public void testDeleteAll() {
+        ArrayList<Event> events = null;
+        try {
+            events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        getContext().getContentResolver()
+                .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
+        assertTrue(eventDbHelper.getStoredData().contains(events.get(0)));
+        Integer deletedRows = getContext().getContentResolver()
+                .delete(EventContract.EventEntry.CONTENT_URI, null, null);
+        assertTrue("Nothing have been deleted", deletedRows > 0);
+    }
+
+
 }

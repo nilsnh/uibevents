@@ -143,4 +143,12 @@ public class Event {
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
+
+    public boolean isToBeDeleted(String selection, String[] selectionArgs) {
+        Boolean isToBeDeleted = false;
+        for (String arg : selectionArgs) {
+            if (getContentValues().getAsString(selection).equals(arg)) isToBeDeleted = true;
+        }
+        return isToBeDeleted;
+    }
 }
