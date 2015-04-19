@@ -1,15 +1,13 @@
 package no.nilsnh.uibevents;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import no.nilsnh.uibevents.data.EventDbHelper;
+import no.nilsnh.uibevents.sync.UibEventsSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements EventFragment.Callback {
@@ -45,6 +43,8 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
 //        EventFragment eventFragment =  ((EventFragment)getSupportFragmentManager()
 //                .findFragmentById(R.id.fragment_forecast));
 //        eventFragment.setUseTodayLayout(!mTwoPane);
+
+        UibEventsSyncAdapter.initializeSyncAdapter(this);
         
     }
 
