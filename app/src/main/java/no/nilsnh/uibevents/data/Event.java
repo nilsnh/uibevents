@@ -67,6 +67,31 @@ public class Event {
         return cValues;
     }
 
+    public static String[] getKeysAsStringList() {
+        return new String[]{
+                "id",
+                "type",
+                "title",
+                "date_from",
+                "date_to",
+                "location",
+                "details",
+                "url"};
+    }
+
+    public String[] getValuesAsStringList() {
+        return new String[]{
+                id,
+                type,
+                title,
+                dateFrom,
+                dateTo,
+                location,
+                details,
+                url
+        };
+    }
+
     public String getId() {
         return id;
     }

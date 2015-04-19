@@ -1,5 +1,7 @@
 package no.nilsnh.uibevents;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.test.AndroidTestCase;
 
 import org.json.JSONException;
@@ -63,5 +65,18 @@ public class ApplicationTest extends AndroidTestCase {
         assertTrue("Nothing have been deleted", deletedRows > 0);
     }
 
+    public void testGetCursor() {
+        ArrayList<Event> events = null;
+        try {
+            events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        getContext().getContentResolver()
+                .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
+        Cursor cursor = getContext().getContentResolver()
+                .query(EventContract.EventEntry.CONTENT_URI, null, null, null, null);
+        assertNotNull(cursor);
 
+    }
 }

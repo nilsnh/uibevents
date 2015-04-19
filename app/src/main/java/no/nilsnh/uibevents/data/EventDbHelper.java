@@ -2,6 +2,7 @@ package no.nilsnh.uibevents.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.MatrixCursor;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,7 +12,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -106,7 +106,6 @@ public class EventDbHelper {
     }
 
     public void saveFile(String data) {
-        FileOutputStream outputStream;
         try {
             String fullFilePath = ctx.getFilesDir() + "/" + filename;
             BufferedWriter buf = new BufferedWriter(new FileWriter(fullFilePath));
@@ -180,7 +179,7 @@ public class EventDbHelper {
         Integer numDeletedRows = null;
 
         //If everything is to be deleted just delete the file
-        if (selection == "1") {
+        if (selection == null) {
             numDeletedRows = storedEvents.size();
             File file = new File(ctx.getFilesDir() + "/" + filename);
             file.delete();
@@ -198,5 +197,14 @@ public class EventDbHelper {
         saveFile(storedEvents);
 
         return numDeletedRows;
+    }
+
+    public MatrixCursor query() {
+        ArrayList<Event> storedEvents = getStoredData();
+        MatrixCursor mCursor = new MatrixCursor(Event.getKeysAsStringList());
+        for (Event event: storedEvents) {
+            mCursor.addRow(event.getValuesAsStringList());
+        }
+        return mCursor;
     }
 }
