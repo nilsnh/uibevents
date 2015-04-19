@@ -17,11 +17,15 @@ import no.nilsnh.uibevents.data.EventDbHelper;
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
 public class ApplicationTest extends AndroidTestCase {
-    public void setUp() {}
+
+    EventDbHelper eventDbHelper;
+
+    public void setUp() {
+        eventDbHelper = new EventDbHelper(getContext());
+    }
 
     public void testFetchFromApi() throws Throwable {
-        EventDbHelper db = new EventDbHelper();
-        String result = db.fetchWebEventData();
+        String result = eventDbHelper.fetchWebEventData();
         assertNotNull(result);
     }
 
@@ -44,7 +48,6 @@ public class ApplicationTest extends AndroidTestCase {
         }
         getContext().getContentResolver()
                 .insert(EventContract.EventEntry.CONTENT_URI, events.get(0));
-        EventDbHelper db = new EventDbHelper();
-        assertTrue(db.getStoredData().contains(events.get(0)));
+        assertTrue(eventDbHelper.getStoredData().contains(events.get(0)));
     }
 }

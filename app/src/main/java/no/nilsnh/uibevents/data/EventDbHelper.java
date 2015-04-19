@@ -111,14 +111,14 @@ public class EventDbHelper {
             String url = event.getString("path");
 
             ContentValues cValues = new ContentValues();
-            event.put(EventContract.EventEntry.COLUMN_EVENT_ID, id);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_TYPE, type);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_TITLE, title);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_DATE_FROM, date_from);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_DATE_TO, date_to);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_LOCATION, location);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_DETAILS, details);
-            event.put(EventContract.EventEntry.COLUMN_EVENT_URL, url);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_ID, id);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_TYPE, type);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_TITLE, title);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_DATE_FROM, date_from);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_DATE_TO, date_to);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_LOCATION, location);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_DETAILS, details);
+            cValues.put(EventContract.EventEntry.COLUMN_EVENT_URL, url);
             parsedEvents.add(cValues);
         }
         return parsedEvents;
@@ -138,10 +138,10 @@ public class EventDbHelper {
     }
 
     public ArrayList<ContentValues> getStoredData() {
-        File file = new File(filename);
+        File file = new File(ctx.getFilesDir() + "/" + filename);
 
         if(file.exists()){
-            ArrayList<String> eventStrings = new ArrayList<>();
+            HashSet<String> eventStrings = new HashSet<>();
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
@@ -172,7 +172,7 @@ public class EventDbHelper {
         }
         else {
             Log.d(LOG_TAG, "Was not able to find file");
-            return null;
+            return new ArrayList<ContentValues>();
         }
     }
 
@@ -189,14 +189,14 @@ public class EventDbHelper {
         if (storedValues.contains(values)) return null;
 
         storedValues.add(values);
-        Integer storedDataPosition = storedValues.indexOf(values);
+        Integer storedDataPosition = storedValues.indexOf(values) + 1;
 
         //Write new data to textFile
         try {
 
             if (!file.exists()) file.createNewFile();
 
-            BufferedWriter buf = new BufferedWriter(new FileWriter(filename, true));
+            BufferedWriter buf = new BufferedWriter(new FileWriter(ctx.getFilesDir() + "/" + filename, true));
             for (ContentValues event : storedValues) {
                 buf.write(event.getAsString("id") + ";");
                 buf.write(event.getAsString("type") + ";");
