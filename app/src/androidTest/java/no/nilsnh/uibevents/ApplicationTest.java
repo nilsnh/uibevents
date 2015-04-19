@@ -1,15 +1,12 @@
 package no.nilsnh.uibevents;
 
-import android.app.Application;
-import android.content.ContentValues;
 import android.test.AndroidTestCase;
-import android.test.ApplicationTestCase;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import no.nilsnh.uibevents.data.Event;
 import no.nilsnh.uibevents.data.EventContract;
 import no.nilsnh.uibevents.data.EventDbHelper;
 
@@ -30,7 +27,7 @@ public class ApplicationTest extends AndroidTestCase {
     }
 
     public void testParseJsonEvent() {
-        ArrayList<ContentValues> events = null;
+        ArrayList<Event> events = null;
         try {
             events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
         } catch (JSONException e) {
@@ -40,14 +37,14 @@ public class ApplicationTest extends AndroidTestCase {
     }
 
     public void testInsertIntoTextFile() {
-        ArrayList<ContentValues> events = null;
+        ArrayList<Event> events = null;
         try {
             events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         getContext().getContentResolver()
-                .insert(EventContract.EventEntry.CONTENT_URI, events.get(0));
+                .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
         assertTrue(eventDbHelper.getStoredData().contains(events.get(0)));
     }
 }

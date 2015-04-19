@@ -95,31 +95,12 @@ public class EventDbHelper {
         return eventJsonStr;
     }
 
-    public static ArrayList<ContentValues> parseJsonEvents(String data) throws JSONException {
-        ArrayList<ContentValues> parsedEvents = new ArrayList<>();
+    public static ArrayList<Event> parseJsonEvents(String data) throws JSONException {
+        ArrayList<Event> parsedEvents = new ArrayList<>();
         JSONArray events = new JSONObject(data).getJSONArray("events");
         for (int i = 0; i < events.length(); i++) {
-            JSONObject event = events.getJSONObject(i);
-
-            Integer id = event.getInt("id");
-            String type = event.getString("type");
-            String title = event.getString("title");
-            String date_from = event.getString("date_from");
-            String date_to = event.getString("date_to");
-            String location = event.getString("location");
-            String details = event.getString("lead");
-            String url = event.getString("path");
-
-            ContentValues cValues = new ContentValues();
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_ID, id);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_TYPE, type);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_TITLE, title);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_DATE_FROM, date_from);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_DATE_TO, date_to);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_LOCATION, location);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_DETAILS, details);
-            cValues.put(EventContract.EventEntry.COLUMN_EVENT_URL, url);
-            parsedEvents.add(cValues);
+            Event event = new Event(events.getJSONObject(i));
+            parsedEvents.add(event);
         }
         return parsedEvents;
     }
@@ -137,7 +118,7 @@ public class EventDbHelper {
         }
     }
 
-    public ArrayList<ContentValues> getStoredData() {
+    public ArrayList<Event> getStoredData() {
         File file = new File(ctx.getFilesDir() + "/" + filename);
 
         if(file.exists()){
@@ -153,65 +134,48 @@ public class EventDbHelper {
                 e.printStackTrace();
             }
 
-            String[] eventDetailsString = null;
-            ContentValues eventDetailsCValue = new ContentValues();
-            ArrayList<ContentValues> events = new ArrayList<>();
-            for (String event: eventStrings) {
-                eventDetailsString = event.split(";");
-                eventDetailsCValue.put("id", eventDetailsString[0]);
-                eventDetailsCValue.put("type", eventDetailsString[1]);
-                eventDetailsCValue.put("title", eventDetailsString[2]);
-                eventDetailsCValue.put("date_from", eventDetailsString[3]);
-                eventDetailsCValue.put("date_to", eventDetailsString[4]);
-                eventDetailsCValue.put("location", eventDetailsString[5]);
-                eventDetailsCValue.put("details", eventDetailsString[6]);
-                eventDetailsCValue.put("url", eventDetailsString[7]);
-                events.add(eventDetailsCValue);
+            ArrayList<Event> events = new ArrayList<>();
+            for (String eventString: eventStrings) {
+                events.add(new Event(eventString));
             }
             return events;
         }
         else {
             Log.d(LOG_TAG, "Was not able to find file");
-            return new ArrayList<ContentValues>();
+            return new ArrayList<Event>();
         }
     }
 
     public Long insert(ContentValues values) {
         File file = new File(ctx.getFilesDir(),filename);
+        Event newEvent = new Event(values);
 
         //First retrieve all data,then check if the value is already stored.
-        ArrayList<ContentValues> storedValues = getStoredData();
+        ArrayList<Event> storedValues = getStoredData();
 
         //If no data exist already create new arrayList
-        if (storedValues == null) storedValues = new ArrayList<>();
+        if (storedValues == null) storedValues = new ArrayList<Event>();
 
         //If the new data is already there stop execution.
-        if (storedValues.contains(values)) return null;
+        if (storedValues.contains(newEvent)) {
+            return Long.valueOf(storedValues.indexOf(newEvent) + 1);
+        }
 
-        storedValues.add(values);
-        Integer storedDataPosition = storedValues.indexOf(values) + 1;
+        storedValues.add(newEvent);
+        Long storedDataPosition = Long.valueOf(storedValues.indexOf(newEvent) + 1);
 
         //Write new data to textFile
         try {
-
             if (!file.exists()) file.createNewFile();
-
             BufferedWriter buf = new BufferedWriter(new FileWriter(ctx.getFilesDir() + "/" + filename, true));
-            for (ContentValues event : storedValues) {
-                buf.write(event.getAsString("id") + ";");
-                buf.write(event.getAsString("type") + ";");
-                buf.write(event.getAsString("title") + ";");
-                buf.write(event.getAsString("date_from") + ";");
-                buf.write(event.getAsString("date_to") + ";");
-                buf.write(event.getAsString("location") + ";");
-                buf.write(event.getAsString("details") + ";");
-                buf.write(event.getAsString("url"));
+            for (Event event : storedValues) {
+                buf.write(event.toString());
                 buf.newLine();
             }
             buf.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Long.valueOf(storedDataPosition);
+        return storedDataPosition;
     }
 }
