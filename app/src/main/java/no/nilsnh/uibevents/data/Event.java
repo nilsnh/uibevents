@@ -27,8 +27,9 @@ public class Event {
         url = values.getAsString("url");
     }
 
-    public Event(String event) {
-        String[] eventDetailsString = event.split(";");
+    public Event(String event) throws ArrayIndexOutOfBoundsException{
+        String[] eventDetailsString = null;
+        eventDetailsString = event.split(";");
         id = eventDetailsString[0];
         type = eventDetailsString[1];
         title = eventDetailsString[2];

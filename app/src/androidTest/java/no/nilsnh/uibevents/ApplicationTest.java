@@ -24,27 +24,26 @@ public class ApplicationTest extends AndroidTestCase {
     }
 
     public void testFetchFromApi() throws Throwable {
-        String result = eventDbHelper.fetchWebEventData();
-        assertNotNull(result);
+        ArrayList<Event> events = eventDbHelper.parseJsonEvents(eventDbHelper.fetchWebEventData());
+        assertTrue(events.size() > 150);
+    }
+
+    public void testSaveFileWithApiData() throws Throwable {
+        ArrayList<Event> events = eventDbHelper.parseJsonEvents(eventDbHelper.fetchWebEventData());
+        eventDbHelper.saveFile(events);
+        ArrayList storedEvents = eventDbHelper.getStoredData();
+        assertTrue(storedEvents.size() > (events.size() / 2));
     }
 
     public void testParseJsonEvent() {
         ArrayList<Event> events = null;
-        try {
-            events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
         assertTrue(events.size() == 2);
     }
 
     public void testInsertIntoTextFile() {
         ArrayList<Event> events = null;
-        try {
-            events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
         getContext().getContentResolver()
                 .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
         assertTrue(eventDbHelper.getStoredData().contains(events.get(0)));
@@ -52,11 +51,7 @@ public class ApplicationTest extends AndroidTestCase {
 
     public void testDeleteAll() {
         ArrayList<Event> events = null;
-        try {
-            events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
         getContext().getContentResolver()
                 .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
         assertTrue(eventDbHelper.getStoredData().contains(events.get(0)));
@@ -67,11 +62,7 @@ public class ApplicationTest extends AndroidTestCase {
 
     public void testGetCursor() {
         ArrayList<Event> events = null;
-        try {
-            events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        events = EventDbHelper.parseJsonEvents(TestUtils.getExampleJson());
         getContext().getContentResolver()
                 .insert(EventContract.EventEntry.CONTENT_URI, events.get(0).getContentValues());
         Cursor cursor = getContext().getContentResolver()

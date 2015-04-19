@@ -12,6 +12,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,6 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -92,26 +97,44 @@ public class EventDbHelper {
                 }
             }
         }
-        return eventJsonStr;
+        return eventJsonStr.replace(";", "-");
     }
 
-    public static ArrayList<Event> parseJsonEvents(String data) throws JSONException {
+    public static ArrayList<Event> parseJsonEvents(String data) {
         ArrayList<Event> parsedEvents = new ArrayList<>();
-        JSONArray events = new JSONObject(data).getJSONArray("events");
-        for (int i = 0; i < events.length(); i++) {
-            Event event = new Event(events.getJSONObject(i));
-            parsedEvents.add(event);
+        JSONArray events = null;
+        try {
+            events = new JSONObject(data).getJSONArray("events");
+            for (int i = 0; i < events.length(); i++) {
+                Event event = new Event(events.getJSONObject(i));
+                parsedEvents.add(event);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return parsedEvents;
     }
 
     public void saveFile(String data) {
         try {
-            String fullFilePath = ctx.getFilesDir() + "/" + filename;
-            BufferedWriter buf = new BufferedWriter(new FileWriter(fullFilePath));
-            buf.write(data);
-            buf.close();
-        } catch (Exception e) {
+            File file = new File(ctx.getFilesDir() + "/" + filename);
+            if (file.exists()) file.delete(); //TODO Only delete events older than X date.
+
+            file.createNewFile();
+            FileOutputStream outStream = new FileOutputStream(file);
+            FileChannel channel = outStream.getChannel();
+            FileLock lock = channel.lock();
+
+            outStream.write(data.getBytes());
+            outStream.flush();
+
+            lock.release();
+
+            outStream.close();
+
+
+
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             Log.d(LOG_TAG, "Data was saved!");
@@ -135,7 +158,7 @@ public class EventDbHelper {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    eventStrings.add(line);
+                    if(!line.isEmpty()) eventStrings.add(line);
                 }
             }
             catch (IOException e) {
@@ -143,9 +166,17 @@ public class EventDbHelper {
             }
 
             ArrayList<Event> events = new ArrayList<>();
+            Event event = null;
             for (String eventString: eventStrings) {
-                events.add(new Event(eventString));
+                try {
+                    event = new Event(eventString);
+                    events.add(event);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Log.d(LOG_TAG, "Could not create event from malformed data");
+                    e.printStackTrace();
+                }
             }
+            Log.d(LOG_TAG, "Finished reading stored data");
             return events;
         }
         else {

@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
 //        eventFragment.setUseTodayLayout(!mTwoPane);
 
         UibEventsSyncAdapter.initializeSyncAdapter(this);
-        
+        UibEventsSyncAdapter.syncImmediately(this);
     }
 
     @Override

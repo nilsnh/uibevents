@@ -12,7 +12,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import no.nilsnh.uibevents.R;
+import no.nilsnh.uibevents.data.Event;
+import no.nilsnh.uibevents.data.EventDbHelper;
 
 public class UibEventsSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -28,7 +32,9 @@ public class UibEventsSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
-
+        EventDbHelper db = new EventDbHelper(getContext());
+        ArrayList<Event> events = db.parseJsonEvents(db.fetchWebEventData());
+        db.saveFile(events);
     }
 
     public static void initializeSyncAdapter(Context context) {

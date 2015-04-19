@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import no.nilsnh.uibevents.data.Event;
 import no.nilsnh.uibevents.data.EventContract;
+import no.nilsnh.uibevents.sync.UibEventsSyncAdapter;
 
 public class EventFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = EventFragment.class.getSimpleName();
@@ -32,6 +32,8 @@ public class EventFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_EVENT_LOCATION = 5;
     static final int COL_EVENT_DETAILS = 6;
     static final int COL_EVENT_URL = 7;
+
+    private static final int EVENT_LOADER = 0;
 
     public EventFragment() {
 
@@ -96,6 +98,16 @@ public class EventFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(EVENT_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    private void updateEvents() {
+        UibEventsSyncAdapter.syncImmediately(getActivity());
+    }
+
+    @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         eventAdapter.swapCursor(data);
         if (mPosition != ListView.INVALID_POSITION) {
@@ -103,6 +115,18 @@ public class EventFragment extends Fragment implements LoaderManager.LoaderCallb
             // to, do so now.
             mListView.smoothScrollToPosition(mPosition);
         }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -121,6 +145,4 @@ public class EventFragment extends Fragment implements LoaderManager.LoaderCallb
          */
         public void onItemSelected(Uri dateUri);
     }
-
-
 }
