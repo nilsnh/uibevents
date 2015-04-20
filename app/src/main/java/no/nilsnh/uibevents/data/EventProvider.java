@@ -13,6 +13,7 @@ public class EventProvider extends ContentProvider {
     private EventDbHelper eventDbHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     static final int EVENT = 100;
+    static final int EVENT_WITH_ID = 101;
 
     @Override
     public boolean onCreate() {
@@ -29,6 +30,10 @@ public class EventProvider extends ContentProvider {
                 mCursor = eventDbHelper.query();
                 break;
             }
+            case EVENT_WITH_ID: {
+                mCursor = eventDbHelper.query(uri);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -41,6 +46,8 @@ public class EventProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case EVENT:
+                return EventContract.EventEntry.CONTENT_ITEM_TYPE;
+            case EVENT_WITH_ID:
                 return EventContract.EventEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -117,7 +124,7 @@ public class EventProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, EventContract.PATH_EVENT, EVENT);
-
+        matcher.addURI(authority, EventContract.PATH_EVENT + "/#", EVENT_WITH_ID);
         return matcher;
     }
 }

@@ -67,7 +67,7 @@ public class EventFragment extends Fragment implements LoaderManager.LoaderCallb
                     //kicks off callback containing uri
                     ((Callback) getActivity())
                             .onItemSelected(EventContract.EventEntry.buildEventUri(
-                                    cursor.getLong(COL_EVENT_ID)
+                                    cursor.getLong(COL_EVENT_API_ID)
                             ));
                 }
                 mPosition = position;

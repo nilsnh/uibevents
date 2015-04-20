@@ -3,6 +3,7 @@ package no.nilsnh.uibevents.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.MatrixCursor;
+import android.net.Uri;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -230,10 +231,7 @@ public class EventDbHelper {
     public MatrixCursor query() {
         ArrayList<Event> storedEvents = getStoredData();
         MatrixCursor mCursor = new MatrixCursor(Event.getKeysAsStringList());
-
-        String[] values = new String[]{"1"};
-
-        Event event = null;
+        Event event;
         for (int i = 0; i < storedEvents.size() -1; i++) {
             event = storedEvents.get(i);
             mCursor.addRow(new String[]{
@@ -249,5 +247,33 @@ public class EventDbHelper {
             });
         }
         return mCursor;
+    }
+
+    public MatrixCursor query(Uri uri) {
+        ArrayList<Event> storedEvents = getStoredData();
+        MatrixCursor mCursor = new MatrixCursor(Event.getKeysAsStringList());
+        Event event;
+        String[] values;
+        for (int i = 0; i < storedEvents.size() -1; i++) {
+            event = storedEvents.get(i);
+            values = new String[]{
+                    String.valueOf(i + 1),
+                    event.getId(),
+                    event.getType(),
+                    event.getTitle(),
+                    event.getDateFrom(),
+                    event.getDateTo(),
+                    event.getLocation(),
+                    event.getDetails(),
+                    event.getUrl()
+            };
+            if (event.getId().equals(uri.getLastPathSegment()))
+                mCursor.addRow(values);
+        }
+        return mCursor;
+    }
+
+    public String getEventIdFromUri(Uri uri){
+        return uri.getLastPathSegment();
     }
 }
