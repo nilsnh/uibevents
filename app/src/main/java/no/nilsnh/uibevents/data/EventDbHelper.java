@@ -26,6 +26,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class EventDbHelper {
 
@@ -131,9 +132,6 @@ public class EventDbHelper {
             lock.release();
 
             outStream.close();
-
-
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -232,8 +230,23 @@ public class EventDbHelper {
     public MatrixCursor query() {
         ArrayList<Event> storedEvents = getStoredData();
         MatrixCursor mCursor = new MatrixCursor(Event.getKeysAsStringList());
-        for (Event event: storedEvents) {
-            mCursor.addRow(event.getValuesAsStringList());
+
+        String[] values = new String[]{"1"};
+
+        Event event = null;
+        for (int i = 0; i < storedEvents.size() -1; i++) {
+            event = storedEvents.get(i);
+            mCursor.addRow(new String[]{
+                    String.valueOf(i + 1),
+                    event.getId(),
+                    event.getType(),
+                    event.getTitle(),
+                    event.getDateFrom(),
+                    event.getDateTo(),
+                    event.getLocation(),
+                    event.getDetails(),
+                    event.getUrl()
+            });
         }
         return mCursor;
     }

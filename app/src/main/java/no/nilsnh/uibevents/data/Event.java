@@ -70,6 +70,7 @@ public class Event {
 
     public static String[] getKeysAsStringList() {
         return new String[]{
+                "_id",
                 "id",
                 "type",
                 "title",
@@ -78,19 +79,6 @@ public class Event {
                 "location",
                 "details",
                 "url"};
-    }
-
-    public String[] getValuesAsStringList() {
-        return new String[]{
-                id,
-                type,
-                title,
-                dateFrom,
-                dateTo,
-                location,
-                details,
-                url
-        };
     }
 
     public String getId() {
