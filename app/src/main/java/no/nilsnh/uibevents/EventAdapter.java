@@ -42,8 +42,10 @@ public class EventAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.titleView.setText(cursor.getString(EventFragment.COL_EVENT_TITLE));
-        viewHolder.dateFromView.setText(cursor.getString(EventFragment.COL_EVENT_DATE_FROM));
-        viewHolder.dateToView.setText(cursor.getString(EventFragment.COL_EVENT_DATE_TO));
+        viewHolder.dateFromView.setText("From: " +
+                Utility.getFriendLyDate(cursor.getString(EventFragment.COL_EVENT_DATE_FROM)));
+        viewHolder.dateToView.setText("Until: " +
+                Utility.getFriendLyDate(cursor.getString(EventFragment.COL_EVENT_DATE_TO)));
         viewHolder.categoryView.setText(cursor.getString(EventFragment.COL_EVENT_TYPE));
     }
 }

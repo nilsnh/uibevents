@@ -25,13 +25,14 @@ public class EventFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final String SELECTED_KEY = "selected_position";
 
     static final int COL_EVENT_ID = 0;
-    static final int COL_EVENT_TYPE = 1;
-    static final int COL_EVENT_TITLE = 2;
-    static final int COL_EVENT_DATE_FROM = 3;
-    static final int COL_EVENT_DATE_TO = 4;
-    static final int COL_EVENT_LOCATION = 5;
-    static final int COL_EVENT_DETAILS = 6;
-    static final int COL_EVENT_URL = 7;
+    static final int COL_EVENT_API_ID = 1;
+    static final int COL_EVENT_TYPE = 2;
+    static final int COL_EVENT_TITLE = 3;
+    static final int COL_EVENT_DATE_FROM = 4;
+    static final int COL_EVENT_DATE_TO = 5;
+    static final int COL_EVENT_LOCATION = 6;
+    static final int COL_EVENT_DETAILS = 7;
+    static final int COL_EVENT_URL = 8;
 
     private static final int EVENT_LOADER = 0;
 
