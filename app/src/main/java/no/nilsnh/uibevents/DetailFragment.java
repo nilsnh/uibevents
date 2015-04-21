@@ -117,9 +117,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (data != null && data.moveToFirst()) {
             titleView.setText(data.getString(COL_EVENT_TITLE));
             categoryView.setText(data.getString(COL_EVENT_TYPE));
-            detailView.setText(data.getString(COL_EVENT_DETAILS));
-            dateFromView.setText(data.getString(COL_EVENT_DATE_FROM));
-            dateToView.setText(data.getString(COL_EVENT_DATE_TO));
+            detailView.setText(Utility.parseDetailsText(data.getString(COL_EVENT_DETAILS)));
+            dateFromView.setText(Utility.getFriendLyDate(data.getString(COL_EVENT_DATE_FROM)));
+            dateToView.setText(Utility.getFriendLyDate(data.getString(COL_EVENT_DATE_TO)));
         }
     }
 

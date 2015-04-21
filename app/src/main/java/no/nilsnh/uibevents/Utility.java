@@ -26,4 +26,9 @@ public class Utility {
         return dateOutPutFormat.format(date);
     }
 
+    public static String parseDetailsText(String eventDetailsText) {
+        if (eventDetailsText.equals("null")) return "Denne eventen har ingen beskrivelse.";
+        else return eventDetailsText.replace("/\"", "\"");
+    }
+
 }
