@@ -1,6 +1,6 @@
-This app was built as a final project in a course in Android App Development hosted by the Bergen Google Developers Group. In addition to weekly study jams we followed an android course on Udacity. 
+This app was built as a final project in a course in Android App Development facilited by a [Google Developers Group in Bergen](http://www.meetup.com/GDGBergen/). In addition to weekly study jams we followed an course in [Android Fundamentals on Udacity](https://www.udacity.com/wiki/ud853). 
 
-## What the app does
+## UiB Events: What the app does
 
 The app talks to an event api which servers the events happening at the University of Bergen. [Info about their event api](http://hackathon.b.uib.no/data-og-idear/uibdata/) (Norwegian). UiB has in fact [an open data initiative](https://it.uib.no/%C3%85pne_data) (Norwegian).
 
