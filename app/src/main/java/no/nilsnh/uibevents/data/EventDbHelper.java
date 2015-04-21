@@ -165,7 +165,7 @@ public class EventDbHelper {
             }
 
             ArrayList<Event> events = new ArrayList<>();
-            Event event = null;
+            Event event;
             for (String eventString: eventStrings) {
                 try {
                     event = new Event(eventString);

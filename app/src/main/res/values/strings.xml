@@ -10,5 +10,5 @@
     <string name="list_item_title_textview">The Norwegian Constitution \"VI: 1814 - 2014\"</string>
     <string name="sync_account_type">uibevents.nilsnh.no</string>
     <string name="list_item_details_textview">Studentteateret immaturus inviterer til jubileumsforestillingen \\\"Alice i Eventyrland\\\", med premiere 11. April.</string>
-    <string name="title_activity_detail">activity detail label</string>
+    <string name="title_activity_detail">UiB event details</string>
 </resources>
