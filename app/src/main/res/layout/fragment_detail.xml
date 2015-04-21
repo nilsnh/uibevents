@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/list_item_title_textview"
+        android:text="@string/list_item_title_textview"
         android:padding="10dp" />
 
     <LinearLayout
@@ -22,15 +23,15 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/list_item_details_textview"
+            android:text="@string/list_item_details_textview"
             android:paddingLeft="10dp"
-            android:layout_weight="1.1" />
+            android:layout_weight="1" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:layout_gravity="center_horizontal"
             android:padding="10dp">
 
             <TextView
@@ -45,6 +46,7 @@
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/list_item_date_from_textview"
+                android:text="@string/list_item_date_from_textview"
                 android:padding="10dp"
                 android:gravity="center_vertical|right" />
 
@@ -53,6 +55,7 @@
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/list_item_date_to_textview"
+                android:text="@string/list_item_date_to_textview"
                 android:padding="10dp"
                 android:gravity="center_vertical|right" />
 

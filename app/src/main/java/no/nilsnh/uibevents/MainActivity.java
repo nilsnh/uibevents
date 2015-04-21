@@ -16,36 +16,36 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     private boolean mTwoPane;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 
         setContentView(R.layout.activity_main);
-//        if (findViewById(R.id.weather_detail_container) != null) {
-//            // The detail container view will be present only in the large-screen layouts
-//            // (res/layout-sw600dp). If this view is present, then the activity should be
-//            // in two-pane mode.
-//            mTwoPane = true;
-//            // In two-pane mode, show the detail view in this activity by
-//            // adding or replacing the detail fragment using a
-//            // fragment transaction.
-//            if (savedInstanceState == null) {
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
-//                        .commit();
-//            }
-//        } else {
-        mTwoPane = false;
-        getSupportActionBar().setElevation(0f);
+        if (findViewById(R.id.event_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.event_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
 
-//        EventFragment eventFragment =  ((EventFragment)getSupportFragmentManager()
-//                .findFragmentById(R.id.fragment_forecast));
-//        eventFragment.setUseTodayLayout(!mTwoPane);
+            EventFragment eventFragment = ((EventFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.event_fragment));
 
-        UibEventsSyncAdapter.initializeSyncAdapter(this);
-        UibEventsSyncAdapter.syncImmediately(this);
+            UibEventsSyncAdapter.initializeSyncAdapter(this);
+            UibEventsSyncAdapter.syncImmediately(this);
+        }
     }
 
     @Override
@@ -72,22 +72,23 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
 
     @Override
     public void onItemSelected(Uri contentUri) {
-//        if (mTwoPane) {
-//            // In two-pane mode, show the detail view in this activity by
-//            // adding or replacing the detail fragment using a
-//            // fragment transaction.
-//            Bundle args = new Bundle();
-//            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
-//
-//            DetailFragment fragment = new DetailFragment();
-//            fragment.setArguments(args);
-//
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
-//                    .commit();
-//        } else {
-        Intent intent = new Intent(this, DetailActivity.class)
-                .setData(contentUri);
-        startActivity(intent);
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.event_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
+        }
     }
 }
