@@ -31,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,6 +63,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView detailView;
     private TextView dateFromView;
     private TextView dateToView;
+    private Button eventUrlButton;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -81,6 +83,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         detailView = (TextView) rootView.findViewById(R.id.list_item_details_textview);
         dateFromView = (TextView) rootView.findViewById(R.id.list_item_date_from_textview);
         dateToView = (TextView) rootView.findViewById(R.id.list_item_date_to_textview);
+        eventUrlButton = (Button) rootView.findViewById(R.id.event_url_button);
         return rootView;
     }
 
@@ -113,13 +116,20 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
         if (data != null && data.moveToFirst()) {
             titleView.setText(data.getString(COL_EVENT_TITLE));
             categoryView.setText(data.getString(COL_EVENT_TYPE));
             detailView.setText(Utility.parseDetailsText(data.getString(COL_EVENT_DETAILS)));
             dateFromView.setText(Utility.getFriendLyDate(data.getString(COL_EVENT_DATE_FROM)));
             dateToView.setText(Utility.getFriendLyDate(data.getString(COL_EVENT_DATE_TO)));
+            eventUrlButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://www.uib.no/" + data.getString(COL_EVENT_URL)));
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 

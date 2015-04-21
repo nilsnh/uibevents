@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/list_item_title_textview"
+        android:text="@string/list_item_title_textview"
         android:padding="10dp" />
 
     <LinearLayout
@@ -17,13 +18,29 @@
         android:weightSum="1"
         android:gravity="fill_horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/list_item_details_textview"
-            android:paddingLeft="10dp"
-            android:layout_weight="1" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/list_item_details_textview"
+                android:text="@string/list_item_details_textview"
+                android:paddingLeft="10dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/event_url_button"
+                android:id="@+id/event_url_button"
+                android:layout_gravity="right"
+                android:padding="10dp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -36,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/list_item_category_textview"
                 android:id="@+id/list_item_category_textview" />
 
             <TextView
@@ -43,6 +61,7 @@
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/list_item_date_from_textview"
+                android:text="@string/list_item_date_from_textview"
                 android:padding="10dp"
                 android:gravity="center_vertical|right" />
 
@@ -51,6 +70,7 @@
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/list_item_date_to_textview"
+                android:text="@string/list_item_date_to_textview"
                 android:padding="10dp"
                 android:gravity="center_vertical|right" />
 
