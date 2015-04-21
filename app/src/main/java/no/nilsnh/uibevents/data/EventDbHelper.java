@@ -166,13 +166,14 @@ public class EventDbHelper {
 
             ArrayList<Event> events = new ArrayList<>();
             Event event;
+            //Here we try to instatiate all the events from the event strings.
+            //and we throw away anyone that does not work.
             for (String eventString: eventStrings) {
                 try {
                     event = new Event(eventString);
                     events.add(event);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Log.d(LOG_TAG, "Could not create event from malformed data");
-                    e.printStackTrace();
                 }
             }
             Log.d(LOG_TAG, "Finished reading stored data");
