@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/event_url_button"
                 android:id="@+id/event_url_button"
-                android:layout_gravity="right"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:layout_marginTop="15dp" />
 
         </LinearLayout>
 
