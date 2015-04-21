@@ -123,6 +123,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             detailView.setText(Utility.parseDetailsText(data.getString(COL_EVENT_DETAILS)));
             dateFromView.setText(Utility.getFriendLyDate(data.getString(COL_EVENT_DATE_FROM)));
             dateToView.setText(Utility.getFriendLyDate(data.getString(COL_EVENT_DATE_TO)));
+            eventUrlButton.setVisibility(View.VISIBLE);
             eventUrlButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://www.uib.no/" + data.getString(COL_EVENT_URL)));
