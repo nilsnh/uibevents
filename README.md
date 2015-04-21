@@ -2,7 +2,7 @@ This app was built as a final project in a course in Android App Development hos
 
 ## What the app does
 
-The app talks to an event api which servers the events happening at the University of Bergen. [Info about their event api](http://hackathon.b.uib.no/data-og-idear/uibdata/)(Norwegian). UiB has in fact [an open data initiative](https://it.uib.no/%C3%85pne_data)(Norwegian).
+The app talks to an event api which servers the events happening at the University of Bergen. [Info about their event api](http://hackathon.b.uib.no/data-og-idear/uibdata/) (Norwegian). UiB has in fact [an open data initiative](https://it.uib.no/%C3%85pne_data) (Norwegian).
 
 ## How it does it
 
