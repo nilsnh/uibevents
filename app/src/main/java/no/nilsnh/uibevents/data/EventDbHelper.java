@@ -99,12 +99,12 @@ public class EventDbHelper {
                 }
             }
         }
-        return eventJsonStr.replace(";", "-");
+        return eventJsonStr;
     }
 
     public static ArrayList<Event> parseJsonEvents(String data) {
         ArrayList<Event> parsedEvents = new ArrayList<>();
-        JSONArray events = null;
+        JSONArray events;
         try {
             events = new JSONObject(data).getJSONArray("events");
             for (int i = 0; i < events.length(); i++) {
@@ -119,20 +119,19 @@ public class EventDbHelper {
 
     public void saveFile(String data) {
         try {
-            File file = new File(ctx.getFilesDir() + "/" + filename);
+            File file = new File(ctx.getFilesDir(), filename);
             if (file.exists()) file.delete(); //TODO Only delete events older than X date.
 
             file.createNewFile();
-            FileOutputStream outStream = new FileOutputStream(file);
-            FileChannel channel = outStream.getChannel();
-            FileLock lock = channel.lock();
+            FileOutputStream outputStream = new FileOutputStream(file);
 
-            outStream.write(data.getBytes());
-            outStream.flush();
+            try {
+                outputStream.write(data.getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            lock.release();
-
-            outStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -149,35 +148,26 @@ public class EventDbHelper {
     }
 
     public ArrayList<Event> getStoredData() {
-        File file = new File(ctx.getFilesDir() + "/" + filename);
+        File file = new File(ctx.getFilesDir(), filename);
 
         if(file.exists()){
-            HashSet<String> eventStrings = new HashSet<>();
+//            HashSet<String> eventStrings = new HashSet<>();
+            StringBuilder sb = new StringBuilder();
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if(!line.isEmpty()) eventStrings.add(line);
+                    if(!line.isEmpty()) sb.append(line);
                 }
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
 
-            ArrayList<Event> events = new ArrayList<>();
-            Event event;
-            //Here we try to instatiate all the events from the event strings.
-            //and we throw away anyone that does not work.
-            for (String eventString: eventStrings) {
-                try {
-                    event = new Event(eventString);
-                    events.add(event);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.d(LOG_TAG, "Could not create event from malformed data");
-                }
-            }
+            ArrayList<Event> events = parseJsonEvents(sb.toString());
             Log.d(LOG_TAG, "Finished reading stored data");
             return events;
+
         }
         else {
             Log.d(LOG_TAG, "Was not able to find file");
