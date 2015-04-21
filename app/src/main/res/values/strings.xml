@@ -11,4 +11,5 @@
     <string name="sync_account_type">uibevents.nilsnh.no</string>
     <string name="list_item_details_textview">Studentteateret immaturus inviterer til jubileumsforestillingen \\\"Alice i Eventyrland\\\", med premiere 11. April.</string>
     <string name="title_activity_detail">UiB event details</string>
+    <string name="event_url_button">Åpne event i nettleser</string>
 </resources>
