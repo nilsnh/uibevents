@@ -43,9 +43,9 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
             EventFragment eventFragment = ((EventFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.event_fragment));
 
-            UibEventsSyncAdapter.initializeSyncAdapter(this);
-//            UibEventsSyncAdapter.syncImmediately(this); //Uncomment for immediate data sync.
         }
+        UibEventsSyncAdapter.initializeSyncAdapter(this);
+        UibEventsSyncAdapter.syncImmediately(this); //Uncomment for immediate data sync.
     }
 
     @Override
