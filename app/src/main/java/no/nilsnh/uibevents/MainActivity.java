@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import no.nilsnh.uibevents.data.EventDbHelper;
 import no.nilsnh.uibevents.sync.UibEventsSyncAdapter;
 
 
@@ -20,7 +21,8 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
+        EventDbHelper eventDbHelper = new EventDbHelper(getApplicationContext());
+        eventDbHelper.initializeDataFile();
 
         setContentView(R.layout.activity_main);
         if (findViewById(R.id.event_detail_container) != null) {
@@ -44,8 +46,9 @@ public class MainActivity extends ActionBarActivity implements EventFragment.Cal
                     .findFragmentById(R.id.event_fragment));
 
         }
+
         UibEventsSyncAdapter.initializeSyncAdapter(this);
-        UibEventsSyncAdapter.syncImmediately(this); //Uncomment for immediate data sync.
+        //UibEventsSyncAdapter.syncImmediately(this); //Uncomment for immediate data sync.
     }
 
     @Override

@@ -267,4 +267,98 @@ public class EventDbHelper {
     public String getEventIdFromUri(Uri uri){
         return uri.getLastPathSegment();
     }
+
+    //This is done in order to have some data on the first run.
+    public void initializeDataFile() {
+        File file = new File(ctx.getFilesDir(), filename);
+        if (!file.exists()) saveFile(getInitialData());
+    }
+
+    private String getInitialData() {
+        return "{\n" +
+                "  \"from_date\": \"2015-04-16T16:40:41+02:00\",\n" +
+                "  \"events\": [\n" +
+                "    {\n" +
+                "      \"type\": \"exhibition\",\n" +
+                "      \"title\": \" The Norwegian Constitution \\\"VI: 1814 - 2014\\\"\",\n" +
+                "      \"date_from\": \"2014-05-11 22:00:00Z\",\n" +
+                "      \"date_to\": \"2016-12-31 15:00:00Z\",\n" +
+                "      \"location\": null,\n" +
+                "      \"lead\": null,\n" +
+                "      \"id\": 70450,\n" +
+                "      \"path\": \"universitymuseum/70450/norwegian-constitution-vi-1814-2014\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"exhibition\",\n" +
+                "      \"title\": \"Grunnlovsutstillingen \\\"Vi 1814-2014\\\"\",\n" +
+                "      \"date_from\": \"2014-05-12 10:00:00Z\",\n" +
+                "      \"date_to\": \"2016-12-31 11:00:00Z\",\n" +
+                "      \"location\": \"De kulturhistoriske samlinger, Haakon Sheteligs plass 10\",\n" +
+                "      \"lead\": \"En annerledes og nyskapende utstilling om demokrati for ungdom og voksne. \",\n" +
+                "      \"id\": 48468,\n" +
+                "      \"path\": \"grunnlovsjubileet2014/48468/grunnlovsutstillingen-vi-1814-2014\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"exhibition\",\n" +
+                "      \"title\": \"Runer i utstillingene\",\n" +
+                "      \"date_from\": \"2014-08-27 22:00:00Z\",\n" +
+                "      \"date_to\": \"2016-09-28 22:00:00Z\",\n" +
+                "      \"location\": \"De kulturhistoriske samlinger\",\n" +
+                "      \"lead\": \"Universitetsmuseets samling med runer er stor. Innskrifter med runer finner man p\\u00e5 v\\u00e5pen, redskaper, smykker, kammer, gullbrakteater og amuletter. I Norden og England er de ogs\\u00e5 funnet p\\u00e5 minnesteiner. I Norge finner vi runer i senere tid ogs\\u00e5 i stavkirkene.\",\n" +
+                "      \"id\": 80443,\n" +
+                "      \"path\": \"universitetsmuseet/80443/runer-i-utstillingene\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"exhibition\",\n" +
+                "      \"title\": \"Studio for eksperimenter og kunnskap\",\n" +
+                "      \"date_from\": \"2014-08-28 08:00:00Z\",\n" +
+                "      \"date_to\": \"2016-12-31 14:00:00Z\",\n" +
+                "      \"location\": \"De kulturhistoriske samlinger\",\n" +
+                "      \"lead\": \"STUDIO - utstilling, aktivitetsrom og et rom for l\\u00e6ring\",\n" +
+                "      \"id\": 80417,\n" +
+                "      \"path\": \"universitetsmuseet/80417/studio-eksperimenter-og-kunnskap\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"exhibition\",\n" +
+                "      \"title\": \"Inntrykk fra koloniene\",\n" +
+                "      \"date_from\": \"2014-08-28 08:00:00Z\",\n" +
+                "      \"date_to\": \"2016-12-31 14:00:00Z\",\n" +
+                "      \"location\": \"De kulturhistoriske samlinger, Haakon Sheteligsplass 10\",\n" +
+                "      \"lead\": \"I denne utstillingen presenterer vi noen av de fantastiske gjenstandene som kom til museet i l\\u00f8pet av kolonitiden. Samlingen gir et inntrykk av det mangfoldet av eksotiske steder hvor nordmenn og bergensere oppholdt seg p\\u00e5 slutten av det 19. og i begynnelsen av det 20. \\u00e5rhundret.\",\n" +
+                "      \"id\": 80413,\n" +
+                "      \"path\": \"universitetsmuseet/80413/inntrykk-fra-koloniene\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"exhibition\",\n" +
+                "      \"title\": \"Ludvig Holberg som faglitter\\u00e6r forfattar\",\n" +
+                "      \"date_from\": \"2015-03-09 07:30:00Z\",\n" +
+                "      \"date_to\": \"2015-06-05 17:00:00Z\",\n" +
+                "      \"location\": \"Bibliotek for humaniora, Haakon Sheteligs plass 7.\",\n" +
+                "      \"lead\": \"Kven f\\u00e5r Holbergprisen i 2015? Det blir kunngjort 12. mars. Tre dagar f\\u00f8r opnar Universitetsbiblioteket utstillinga \\\"Holberg som faglitter\\u00e6r forfattar\\\". Vi vil markere at Holberg f\\u00f8rst og fremst var eit universitetsmenneske: professor og vitskapsmann som publiserte n\\u00e6rmare 16 000 sider med faglitteratur.\",\n" +
+                "      \"id\": 86659,\n" +
+                "      \"path\": \"ub/86659/ludvig-holberg-som-faglitter\\u00e6r-forfattar\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"course_language\",\n" +
+                "      \"title\": \"Nynorsk for framandspr\\u00e5klege\",\n" +
+                "      \"date_from\": \"2015-04-08 10:15:00Z\",\n" +
+                "      \"date_to\": \"2015-04-22 14:00:00Z\",\n" +
+                "      \"location\": null,\n" +
+                "      \"lead\": \"Personalavdelinga tilbyr i samarbeid med Institutt for lingvistiske, litter\\u00e6re og estetiske studiar (LLE) eit innf\\u00f8ringskurs i nynorsk for dei som ikkje har norsk som morsm\\u00e5l.\",\n" +
+                "      \"id\": 85633,\n" +
+                "      \"path\": \"sim/85633/nynorsk-framandspr\\u00e5klege\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"course_language\",\n" +
+                "      \"title\": \"Nynorsk for framandspr\\u00e5klege\",\n" +
+                "      \"date_from\": \"2015-04-08 10:15:00Z\",\n" +
+                "      \"date_to\": \"2015-04-22 14:00:00Z\",\n" +
+                "      \"location\": null,\n" +
+                "      \"lead\": \"Personalavdelinga tilbyr i samarbeid med Institutt for lingvistiske, litter\\u00e6re og estetiske studiar (LLE) eit innf\\u00f8ringskurs i nynorsk for dei som ikkje har norsk som morsm\\u00e5l.\",\n" +
+                "      \"id\": 87022,\n" +
+                "      \"path\": \"sim/87022/nynorsk-framandspr\\u00e5klege\"\n" +
+                "    }]\n" +
+                "}";
+    }
+
 }
