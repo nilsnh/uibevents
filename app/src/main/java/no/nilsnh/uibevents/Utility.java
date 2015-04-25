@@ -5,16 +5,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Utility {
 
     public static String getFriendLyDate(String dateString) {
 
         SimpleDateFormat dateInputFormat =
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateInputFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         SimpleDateFormat dateOutPutFormat =
-                new SimpleDateFormat("dd.MM.yy HH:mm", Locale.GERMAN);
+                new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
 
         Date date = null;
         try {
